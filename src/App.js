@@ -1,32 +1,26 @@
 import "./App.css";
 import "rsuite/dist/styles/rsuite-dark.css";
-import { Button } from "rsuite";
+import {} from "rsuite";
 import React from "react";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link
-} from "react-router-dom";
-
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import Login from "./Login.js";
+import Home from "./Home.js";
 
 function App() {
 	return (
 		<Router>
-			<div className="App">
-					<Button appearance="primary"> Hello world </Button>
+			<div>
 				<Switch>
-					<Route path="/about">
-						<Test />
+					<Route path="/login">
+						<Login />
+					</Route>
+					<Route path="/">
+						<Home />
 					</Route>
 				</Switch>
 			</div>
 		</Router>
 	);
-}
-
-function Test() {
-	return (<h2>Test</h2>)
 }
 
 export default App;

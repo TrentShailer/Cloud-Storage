@@ -28,7 +28,7 @@ async function Connect() {
 
 async function query (sql, params) {
 	const client = await Connect();
-	if (client == -1) {
+	if (client === -1) {
 		console.error("Failed to connect to database");
 		return -3;
 	}
@@ -36,7 +36,7 @@ async function query (sql, params) {
 	try {
 		const res = await client.query(sql, params);
 
-		if (res == null || res.rowCount == 0) {
+		if (res == null || res.rowCount === 0) {
 			client.release();
 			return -1;
 		}
