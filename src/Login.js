@@ -77,7 +77,7 @@ class Login extends React.Component {
 		const { formValue } = this.state;
 		return (
 			<div>
-				<Container style={{ marginTop: "250px" }}>
+				<Container style={{ marginTop: "150px" }}>
 					<Content>
 						<FlexboxGrid justify="center">
 							<FlexboxGrid.Item colspan={this.LoginWidth()}>
