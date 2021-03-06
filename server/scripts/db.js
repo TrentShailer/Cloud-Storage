@@ -11,22 +11,22 @@ const pool = new Pool({
 async function Connect() {
 	return new Promise(async (resolve) => {
 		var tries = 20;
-		while (tries) {
+		while (tries > 0) {
 			try {
+				tries--;
 				const client = await pool.connect();
 				resolve(client);
 				break;
 			} catch (err) {
-				tries--;
 				console.log(`Failed to connect to database, ${tries} tries remaining`);
-				await new Promise((res) => setTimeout(res, 7500));
+				await new Promise((res) => setTimeout(res, 5000));
 			}
 		}
 		resolve(-1);
 	});
 }
 
-async function query (sql, params) {
+async function query(sql, params = []) {
 	const client = await Connect();
 	if (client === -1) {
 		console.error("Failed to connect to database");
@@ -48,6 +48,6 @@ async function query (sql, params) {
 		client.release();
 		return -2;
 	}
-};
+}
 
 module.exports.query = query;

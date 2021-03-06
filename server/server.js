@@ -43,9 +43,8 @@ app.use(require("./routes/user.js"));
 app.get("/", function (req, res) {
 	if (req.session.user) {
 		res.sendFile(path.join(__dirname, "../build", "index.html"));
-	}
-	else {
-		res.redirect("/login")
+	} else {
+		res.redirect("/login");
 	}
 });
 
