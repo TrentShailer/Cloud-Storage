@@ -40,7 +40,7 @@ app.use("/*", function (req, res, next) {
 
 app.use(require("./routes/user.js"));
 
-app.get("/", function (req, res) {
+app.get("/home", function (req, res) {
 	if (req.session.user) {
 		res.sendFile(path.join(__dirname, "../build", "index.html"));
 	} else {

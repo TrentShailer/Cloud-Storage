@@ -43,8 +43,7 @@ async function query(sql, params = []) {
 		client.release();
 		return res;
 	} catch (err) {
-		console.log({ result: "Error executing query", sql: sql, params: params });
-		console.error(err.stack);
+		console.log({ error: err.message, sql: sql, params: params });
 		client.release();
 		return -2;
 	}

@@ -8,12 +8,12 @@ app.get("/login", async (req, res) => {
 	if (req.session.user) {
 		return res.redirect("/");
 	}
-	res.sendFile(path.join(__dirname, "../build", "index.html"));
+	res.sendFile(path.join(__dirname, "../", "../build", "index.html"));
 });
 
 app.get("/logout", function (req, res, next) {
 	req.session = null;
-	res.redirect('/login');
-})
+	res.redirect("/login");
+});
 
 module.exports = app;

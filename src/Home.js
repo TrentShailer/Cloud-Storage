@@ -3,7 +3,7 @@ import "rsuite/dist/styles/rsuite-dark.css";
 import {} from "rsuite";
 import React from "react";
 function Home() {
-	return <div></div>;
+	return <div>Home</div>;
 }
 
 export default Home;

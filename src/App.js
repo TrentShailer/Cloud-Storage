@@ -5,6 +5,7 @@ import React from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Login from "./Login.js";
 import Home from "./Home.js";
+import Redirect from "./Redirect.js";
 
 function App() {
 	return (
@@ -14,8 +15,11 @@ function App() {
 					<Route path="/login">
 						<Login />
 					</Route>
-					<Route path="/">
+					<Route path="/home">
 						<Home />
+					</Route>
+					<Route path="/">
+						<Redirect path="login" />
 					</Route>
 				</Switch>
 			</div>
