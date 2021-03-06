@@ -10,34 +10,78 @@ const model = Schema.Model({
 	email: StringType()
 		.isEmail("Please enter a valid email address.")
 		.isRequired("This field is required."),
+	password: StringType()
+		.addRule((value, data) => {
+			if (!value.match(/^(?=.*[a-z]).+$/gm)) {
+				return false;
+			}
+			return true;
+		}, "The password must contain lower case characters.")
+		.addRule((value, data) => {
+			if (!value.match(/^(?=.*[0-9]).+$/gm)) {
+				return false;
+			}
+			return true;
+		}, "The password must contain at least 1 number.")
+		.addRule((value, data) => {
+			if (!value.match(/^(?=.*[A-Z]).+$/gm)) {
+				return false;
+			}
+			return true;
+		}, "The password must contain upper case characters.")
+		.addRule((value, data) => {
+			if (!value.match(/^(?=.*[^a-zA-Z0-9]).+$/gm)) {
+				return false;
+			}
+			return true;
+		}, "The password must contain at least 1 special character.")
+		.minLength(8, "Password is too short.")
+		.maxLength(40, "Password is too long.")
+		.isRequired("This field is required."),
+	verifyPassword: StringType()
+		.addRule((value, data) => {
+			if (value !== data.password) {
+				return false;
+			}
+
+			return true;
+		}, "The two passwords do not match")
+		.isRequired("This field is required."),
 });
 
-class Forgot extends React.Component {
+class Register extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
 			formValue: {
 				email: "",
+				password: "",
+				verifyPassword: "",
 			},
 		};
 		this.resetForm = this.resetForm.bind(this);
 	}
+
 	resetForm = () => {
 		this.setState({ formValue: { email: "", password: "", verifyPassword: "" } });
 	};
+
 	submit = () => {
 		const { formValue } = this.state;
 		if (!this.form.check()) {
 			return;
 		}
 		axios
-			.post("/register", formValue)
+			.post("/forgotPassword", formValue)
 			.then((res) => {
 				if (res.data.success) {
-					Alert.success("Successfully registered.", 3000);
+					Alert.success(
+						"An email has been sent with instructions on how to reset your password.",
+						3000
+					);
 					this.props.close();
 				} else {
-					Alert.error("An account already exists with this email.", 3000);
+					Alert.error("An account does not exist with this email.", 3000);
 				}
 			})
 			.catch((err) => {
@@ -51,8 +95,8 @@ class Forgot extends React.Component {
 			<Modal
 				show={this.props.show}
 				onHide={() => {
-					this.props.close();
 					this.resetForm();
+					this.props.close();
 				}}
 			>
 				<Modal.Header>
@@ -75,16 +119,24 @@ class Forgot extends React.Component {
 							<ControlLabel>Email address</ControlLabel>
 							<FormControl type="email" name="email" />
 						</FormGroup>
+						<FormGroup>
+							<ControlLabel>Password</ControlLabel>
+							<FormControl type="password" name="password" />
+						</FormGroup>
+						<FormGroup>
+							<ControlLabel>Verify Password</ControlLabel>
+							<FormControl type="password" name="verifyPassword" />
+						</FormGroup>
 					</Form>
 				</Modal.Body>
 				<Modal.Footer>
 					<Button onClick={this.submit} appearance="primary">
-						Reset Password
+						Register
 					</Button>
 					<Button
 						onClick={() => {
-							this.props.close();
 							this.resetForm();
+							this.props.close();
 						}}
 						appearance="subtle"
 					>
@@ -96,4 +148,4 @@ class Forgot extends React.Component {
 	}
 }
 
-export default Forgot;
+export default Register;

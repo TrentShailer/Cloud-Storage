@@ -17,6 +17,7 @@ import {
 import React from "react";
 import axios from "axios";
 import Forgot from "./Forgot.js";
+import Register from "./Register.js";
 
 const { StringType } = Schema.Types;
 
@@ -26,7 +27,7 @@ const model = Schema.Model({
 		.isRequired("This field is required."),
 	password: StringType()
 		.maxLength(40, "Password is too long.")
-		.minLength(3, "Password is too short.")
+		.minLength(8, "Password is too short.")
 		.isRequired("This field is required."),
 });
 
@@ -39,10 +40,13 @@ class Login extends React.Component {
 				password: "",
 			},
 			showForgot: false,
+			showRegister: false,
 		};
 		this.SignIn = this.SignIn.bind(this);
 		this.OpenForgot = this.OpenForgot.bind(this);
+		this.OpenRegister = this.OpenRegister.bind(this);
 		this.CloseForgot = this.CloseForgot.bind(this);
+		this.CloseRegister = this.CloseRegister.bind(this);
 	}
 
 	SignIn = () => {
@@ -82,11 +86,20 @@ class Login extends React.Component {
 		this.setState({ showForgot: true });
 	};
 
+	CloseRegister = () => {
+		this.setState({ showRegister: false });
+	};
+
+	OpenRegister = () => {
+		this.setState({ showRegister: true });
+	};
+
 	render() {
 		const { formValue } = this.state;
 		return (
 			<div>
 				<Forgot show={this.state.showForgot} close={this.CloseForgot}></Forgot>
+				<Register show={this.state.showRegister} close={this.CloseRegister}></Register>
 				<Container style={{ marginTop: "150px" }}>
 					<Content>
 						<FlexboxGrid justify="center">
@@ -120,7 +133,7 @@ class Login extends React.Component {
 												<Button onClick={this.OpenForgot} appearance="link">
 													Forgot password?
 												</Button>
-												<Button href="/register" color="green">
+												<Button onClick={this.OpenRegister} color="green">
 													Register
 												</Button>
 											</ButtonGroup>
