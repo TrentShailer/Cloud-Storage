@@ -16,6 +16,7 @@ import {
 } from "rsuite";
 import React from "react";
 import axios from "axios";
+import Forgot from "./Forgot.js";
 
 const { StringType } = Schema.Types;
 
@@ -37,12 +38,14 @@ class Login extends React.Component {
 				email: "",
 				password: "",
 			},
+			showForgot: false,
 		};
 		this.SignIn = this.SignIn.bind(this);
+		this.OpenForgot = this.OpenForgot.bind(this);
+		this.CloseForgot = this.CloseForgot.bind(this);
 	}
 
 	SignIn = () => {
-		this.setState({ shake: false });
 		const { formValue } = this.state;
 		if (!this.form.check()) {
 			return;
@@ -61,8 +64,6 @@ class Login extends React.Component {
 			});
 	};
 
-	Forgot = () => {};
-
 	LoginWidth = () => {
 		if (window.innerWidth < 600) {
 			return 22;
@@ -73,10 +74,19 @@ class Login extends React.Component {
 		}
 	};
 
+	CloseForgot = () => {
+		this.setState({ showForgot: false });
+	};
+
+	OpenForgot = () => {
+		this.setState({ showForgot: true });
+	};
+
 	render() {
 		const { formValue } = this.state;
 		return (
 			<div>
+				<Forgot show={this.state.showForgot} close={this.CloseForgot}></Forgot>
 				<Container style={{ marginTop: "150px" }}>
 					<Content>
 						<FlexboxGrid justify="center">
@@ -107,7 +117,7 @@ class Login extends React.Component {
 												<Button onClick={this.SignIn} appearance="primary">
 													Sign in
 												</Button>
-												<Button onClick={this.Forgot} appearance="link">
+												<Button onClick={this.OpenForgot} appearance="link">
 													Forgot password?
 												</Button>
 												<Button href="/register" color="green">
