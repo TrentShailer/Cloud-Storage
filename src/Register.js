@@ -72,16 +72,13 @@ class Register extends React.Component {
 			return;
 		}
 		axios
-			.post("/forgotPassword", formValue)
+			.post("/register", formValue)
 			.then((res) => {
 				if (res.data.success) {
-					Alert.success(
-						"An email has been sent with instructions on how to reset your password.",
-						3000
-					);
+					Alert.success("Successfully registered, you may now login.", 3000);
 					this.props.close();
 				} else {
-					Alert.error("An account does not exist with this email.", 3000);
+					Alert.error("An account already exists with this email.", 3000);
 				}
 			})
 			.catch((err) => {
