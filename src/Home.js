@@ -1,24 +1,81 @@
-import { Navbar, Nav, Icon, Drawer, Button, IconButton } from "rsuite";
+import { Navbar, Nav, Icon, Drawer, Button, IconButton, Sidenav, Divider, Progress } from "rsuite";
+import { ToReadable } from "./Util.js";
 import React from "react";
-
 class Home extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
 			showProfile: false,
-			first_name: "",
-			last_name: "",
+			first_name: "Trent",
+			last_name: "Shailer",
+			email: "trent.shailer@gmail.com",
+			max_storage: 100000000000,
+			used_storage: 50000000000,
+			storagePercent: 95,
+			strokeColor: "default",
 		};
 		this.ShowProfile = this.ShowProfile.bind(this);
 		this.CoseProfile = this.CoseProfile.bind(this);
+		this.SetProgress = this.SetProgress.bind(this);
+		this.StorageModule = this.StorageModule.bind(this);
 	}
-
+	componentDidMount() {
+		this.SetProgress();
+	}
 	ShowProfile = () => {
 		this.setState({ showProfile: true });
 	};
 
 	CoseProfile = () => {
 		this.setState({ showProfile: false });
+	};
+
+	SetProgress = () => {
+		var percent = (this.state.used_storage / this.state.max_storage) * 100;
+		this.setState({ storagePercent: percent });
+		var color = "default";
+		if (percent >= 95) {
+			color = "red";
+		} else if (percent >= 90) {
+			color = "orange";
+		} else {
+			color = "default";
+		}
+		this.setState({ strokeColor: color });
+	};
+	StorageModule = () => {
+		return (
+			<div>
+				<Divider />
+				<div style={{ display: "inline-block", width: "100%", textAlign: "center" }}>
+					<h4 style={{ fontWeight: 300 }}>Storage</h4>
+				</div>
+				<Progress.Line
+					strokeWidth={5}
+					percent={this.state.storagePercent}
+					showInfo={false}
+					strokeColor={this.state.strokeColor}
+				/>
+				<div style={{ display: "inline-block", width: "100%", textAlign: "center" }}>
+					<p style={{ fontSize: 12 }}>
+						{ToReadable(this.state.used_storage)} used of {ToReadable(this.state.max_storage)}
+					</p>
+				</div>
+				<div style={{ display: "inline-block", width: "100%", textAlign: "center" }}>
+					<a style={{ fontSize: 12 }} href="/upgrade">
+						Click here to buy more.
+					</a>
+				</div>
+			</div>
+		);
+	};
+
+	FillSpace = () => {
+		return (
+			<div>
+				<div style={{ height: "100vh" }}></div>
+			</div>
+		);
 	};
 
 	render() {
@@ -40,22 +97,49 @@ class Home extends React.Component {
 						</Nav>
 					</Navbar.Body>
 				</Navbar>
-				<Drawer size="xs" show={this.state.showProfile} onHide={this.CoseProfile}>
+				<Drawer style={{ width: 250 }} show={this.state.showProfile} onHide={this.CoseProfile}>
 					<Drawer.Header>
 						<Drawer.Title>
 							{this.state.first_name} {this.state.last_name}
+							<p style={{ fontWeight: 200, fontSize: 12 }}>{this.state.email}</p>
 						</Drawer.Title>
 					</Drawer.Header>
-					<Drawer.Body></Drawer.Body>
+					<Drawer.Body>
+						<p>Your account has {ToReadable(this.state.max_storage)} of storage.</p>
+						<a href="/upgrade">Click here to buy more.</a>
+					</Drawer.Body>
 					<Drawer.Footer>
-						<Button onClick={this.CoseProfile} appearance="primary">
-							Confirm
-						</Button>
-						<Button onClick={this.CoseProfile} appearance="subtle">
-							Cancel
+						<Button
+							block
+							style={{ marginBottom: 10 }}
+							onClick={() => {
+								window.location.href = "/logout";
+							}}
+							color="red"
+						>
+							<Icon icon="sign-out" /> Sign Out
 						</Button>
 					</Drawer.Footer>
 				</Drawer>
+				<div style={{ width: 250 }}>
+					<Sidenav activeKey="1">
+						<Sidenav.Body>
+							<Nav>
+								<Nav.Item eventKey="1" icon={<Icon icon="home" />}>
+									All Files
+								</Nav.Item>
+								<Nav.Item eventKey="2" icon={<Icon icon="star" />}>
+									Starred Files
+								</Nav.Item>
+								<Nav.Item eventKey="3" icon={<Icon icon="trash2" />}>
+									Deleted Files
+								</Nav.Item>
+								<Nav.Item renderItem={this.StorageModule}></Nav.Item>
+								<Nav.Item renderItem={this.FillSpace}></Nav.Item>
+							</Nav>
+						</Sidenav.Body>
+					</Sidenav>
+				</div>
 			</div>
 		);
 	}
