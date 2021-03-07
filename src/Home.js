@@ -1,17 +1,31 @@
-import { Navbar, Nav, Icon, Drawer, Button, IconButton, Sidenav, Divider, Progress } from "rsuite";
+import {
+	Alert,
+	Navbar,
+	Nav,
+	Icon,
+	Drawer,
+	Button,
+	IconButton,
+	Sidenav,
+	Divider,
+	Progress,
+} from "rsuite";
 import { ToReadable } from "./Util.js";
 import React from "react";
+import axios from "axios";
+
 class Home extends React.Component {
 	constructor(props) {
 		super(props);
+
 		this.state = {
 			showProfile: false,
-			first_name: "Trent",
-			last_name: "Shailer",
-			email: "trent.shailer@gmail.com",
-			max_storage: 100000000000,
-			used_storage: 50000000000,
-			storagePercent: 95,
+			first_name: "",
+			last_name: "",
+			email: "",
+			max_storage: 0,
+			used_storage: 0,
+			storagePercent: 0,
 			strokeColor: "default",
 		};
 		this.ShowProfile = this.ShowProfile.bind(this);
@@ -20,7 +34,25 @@ class Home extends React.Component {
 		this.StorageModule = this.StorageModule.bind(this);
 	}
 	componentDidMount() {
-		this.SetProgress();
+		axios
+			.post("/getUserData")
+			.then((res) => {
+				this.setState(
+					{
+						first_name: res.data.first_name,
+						last_name: res.data.last_name,
+						email: res.data.email,
+						max_storage: res.data.max_storage,
+						used_storage: res.data.used_storage,
+					},
+					() => {
+						this.SetProgress();
+					}
+				);
+			})
+			.catch((err) => {
+				Alert.error("Unable to contact server.", 3000);
+			});
 	}
 	ShowProfile = () => {
 		this.setState({ showProfile: true });
@@ -111,7 +143,7 @@ class Home extends React.Component {
 					<Drawer.Footer>
 						<Button
 							block
-							style={{ marginBottom: 10 }}
+							style={{ marginBottom: 30 }}
 							onClick={() => {
 								window.location.href = "/logout";
 							}}
