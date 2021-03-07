@@ -47,6 +47,14 @@ const model = Schema.Model({
 			return true;
 		}, "The two passwords do not match")
 		.isRequired("This field is required."),
+	first_name: StringType()
+		.minLength(2, "Name must be at least 2 characters.")
+		.maxLength(32, "Name must be less than 32 characters.")
+		.isRequired("This field is required."),
+	last_name: StringType()
+		.minLength(2, "Name must be at least 2 characters.")
+		.maxLength(32, "Name must be less than 32 characters.")
+		.isRequired("This field is required."),
 });
 
 class Register extends React.Component {
@@ -57,6 +65,8 @@ class Register extends React.Component {
 				email: "",
 				password: "",
 				verifyPassword: "",
+				first_name: "",
+				last_name: "",
 			},
 		};
 		this.resetForm = this.resetForm.bind(this);
@@ -115,6 +125,11 @@ class Register extends React.Component {
 						<FormGroup>
 							<ControlLabel>Email address</ControlLabel>
 							<FormControl type="email" name="email" />
+						</FormGroup>
+						<FormGroup>
+							<ControlLabel>Name</ControlLabel>
+							<FormControl type="text" name="first_name" placeholder="First Name" />
+							<FormControl type="text" name="last_name" placeholder="Last Name" />
 						</FormGroup>
 						<FormGroup>
 							<ControlLabel>Password</ControlLabel>
