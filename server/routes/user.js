@@ -10,7 +10,7 @@ const security = require("../scripts/security.js");
 
 app.get("/login", async (req, res) => {
 	if (req.session.user) {
-		return res.redirect("/");
+		return res.redirect("/home");
 	}
 	res.sendFile(path.join(__dirname, "../", "../build", "index.html"));
 });
@@ -22,14 +22,15 @@ app.get("/logout", function (req, res, next) {
 
 async function AccountExists(email) {
 	var result = await db.query("SELECT email FROM users WHERE email = $1", [email.toLowerCase()]);
+
 	if (result === -1) return false;
 	else return true;
 }
 
 app.post("/register", urlencodedParser, async (req, res) => {
 	// Check if an account with that email already exists
-	if (AccountExists(req.body.email)) {
-		return res.end({ success: false });
+	if (await AccountExists(req.body.email)) {
+		return res.send({ success: false });
 	}
 
 	// Hash their password
@@ -49,35 +50,35 @@ app.post("/register", urlencodedParser, async (req, res) => {
 
 	// TODO Send confirmation email
 
-	return res.end({ success: true });
+	return res.send({ success: true });
 });
 
 app.post("/forgotPassword", urlencodedParser, async (req, res) => {
-	if (!AccountExists(req.body.email)) {
-		return res.end({ success: false });
+	if (!(await AccountExists(req.body.email))) {
+		return res.send({ success: false });
 	}
-	return res.end({ success: true });
+	return res.send({ success: true });
 });
 
 app.post("/login", urlencodedParser, async (req, res) => {
 	// Check if an account with their email exists
 	// If not return a fail
-	if (!AccountExists(req.body.email)) {
-		return res.end({ success: false });
+	if (!(await AccountExists(req.body.email))) {
+		return res.send({ success: false });
 	}
 
 	// Get the password and id from their email
 	var userQuery = await db.query("SELECT password, id FROM users WHERE email = $1", [
 		req.body.email.toLowerCase(),
 	]);
-	if (userQuery === -1) return res.end({ success: false });
+	if (userQuery === -1) return res.send({ success: false });
 
 	// Check if the password hash matches the password the user put in
 	if (await security.CheckHash(userQuery.rows[0].password, req.body.password)) {
 		req.session.user = { id: userQuery.rows[0].id };
-		return res.end({ success: true });
+		return res.send({ success: true });
 	} else {
-		return res.end({ success: false });
+		return res.send({ success: false });
 	}
 });
 

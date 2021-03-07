@@ -13,6 +13,7 @@ import {
 	Button,
 	Schema,
 	Alert,
+	Loader,
 } from "rsuite";
 import React from "react";
 import axios from "axios";
@@ -41,6 +42,7 @@ class Login extends React.Component {
 			},
 			showForgot: false,
 			showRegister: false,
+			loading: false,
 		};
 		this.SignIn = this.SignIn.bind(this);
 		this.OpenForgot = this.OpenForgot.bind(this);
@@ -54,17 +56,21 @@ class Login extends React.Component {
 		if (!this.form.check()) {
 			return;
 		}
+		this.setState({ loading: true });
 		axios
 			.post("/login", formValue)
 			.then((res) => {
 				if (res.data.success) {
 					window.location.href = "/";
+					this.setState({ loading: false });
 				} else {
 					Alert.error("Username or password is incorrect.", 3000);
+					this.setState({ loading: false });
 				}
 			})
 			.catch((err) => {
 				Alert.error("Unable to contact server.", 3000);
+				this.setState({ loading: false });
 			});
 	};
 
@@ -119,26 +125,43 @@ class Login extends React.Component {
 									>
 										<FormGroup>
 											<ControlLabel>Email address</ControlLabel>
-											<FormControl type="email" name="email" />
+											<FormControl errorPlacement="topEnd" type="email" name="email" />
 										</FormGroup>
 										<FormGroup>
 											<ControlLabel>Password</ControlLabel>
-											<FormControl onChange={this.UpdateEmail} name="password" type="password" />
+											<FormControl
+												errorPlacement="topEnd"
+												onChange={this.UpdateEmail}
+												name="password"
+												type="password"
+											/>
 										</FormGroup>
 										<FormGroup>
 											<ButtonGroup justified>
-												<Button onClick={this.SignIn} appearance="primary">
-													Sign in
+												<Button
+													disabled={this.state.loading}
+													onClick={this.OpenRegister}
+													color="cyan"
+												>
+													Register
 												</Button>
-												<Button onClick={this.OpenForgot} appearance="link">
+
+												<Button
+													disabled={this.state.loading}
+													onClick={this.OpenForgot}
+													appearance="link"
+												>
 													Forgot password?
 												</Button>
-												<Button onClick={this.OpenRegister} color="green">
-													Register
+												<Button disabled={this.state.loading} onClick={this.SignIn} color="green">
+													Sign in
 												</Button>
 											</ButtonGroup>
 										</FormGroup>
 									</Form>
+									{this.state.loading && (
+										<Loader backdrop size="lg" content="Verifying..." vertical />
+									)}
 								</Panel>
 							</FlexboxGrid.Item>
 						</FlexboxGrid>

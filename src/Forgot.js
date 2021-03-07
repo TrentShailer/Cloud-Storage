@@ -1,6 +1,16 @@
 import "./App.css";
 import "rsuite/dist/styles/rsuite-dark.css";
-import { Form, FormGroup, ControlLabel, FormControl, Button, Modal, Schema, Alert } from "rsuite";
+import {
+	Form,
+	Loader,
+	FormGroup,
+	ControlLabel,
+	FormControl,
+	Button,
+	Modal,
+	Schema,
+	Alert,
+} from "rsuite";
 import React from "react";
 import axios from "axios";
 
@@ -19,6 +29,7 @@ class Forgot extends React.Component {
 			formValue: {
 				email: "",
 			},
+			loading: false,
 		};
 		this.resetForm = this.resetForm.bind(this);
 	}
@@ -30,6 +41,7 @@ class Forgot extends React.Component {
 		if (!this.form.check()) {
 			return;
 		}
+		this.setState({ loading: true });
 		axios
 			.post("/register", formValue)
 			.then((res) => {
@@ -38,12 +50,15 @@ class Forgot extends React.Component {
 						"An email has been sent with instructions on how to reset your password.",
 						3000
 					);
+					this.setState({ loading: false });
 					this.props.close();
 				} else {
 					Alert.error("An account does not exist with this email.", 3000);
+					this.setState({ loading: false });
 				}
 			})
 			.catch((err) => {
+				this.setState({ loading: false });
 				Alert.error("Unable to contact server.", 3000);
 			});
 	};
@@ -76,7 +91,7 @@ class Forgot extends React.Component {
 					>
 						<FormGroup>
 							<ControlLabel>Email address</ControlLabel>
-							<FormControl type="email" name="email" />
+							<FormControl errorPlacement="topEnd" type="email" name="email" />
 						</FormGroup>
 					</Form>
 				</Modal.Body>
@@ -94,6 +109,7 @@ class Forgot extends React.Component {
 						Cancel
 					</Button>
 				</Modal.Footer>
+				{this.state.loading && <Loader backdrop size="lg" content="Verifying..." vertical />}
 			</Modal>
 		);
 	}

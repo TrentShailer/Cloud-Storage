@@ -1,6 +1,16 @@
 import "./App.css";
 import "rsuite/dist/styles/rsuite-dark.css";
-import { Form, FormGroup, ControlLabel, FormControl, Button, Modal, Schema, Alert } from "rsuite";
+import {
+	Form,
+	Loader,
+	FormGroup,
+	ControlLabel,
+	FormControl,
+	Button,
+	Modal,
+	Schema,
+	Alert,
+} from "rsuite";
 import React from "react";
 import axios from "axios";
 
@@ -68,6 +78,7 @@ class Register extends React.Component {
 				first_name: "",
 				last_name: "",
 			},
+			loading: false,
 		};
 		this.resetForm = this.resetForm.bind(this);
 	}
@@ -81,18 +92,22 @@ class Register extends React.Component {
 		if (!this.form.check()) {
 			return;
 		}
+		this.setState({ loading: true });
 		axios
 			.post("/register", formValue)
 			.then((res) => {
 				if (res.data.success) {
 					Alert.success("Successfully registered, you may now login.", 3000);
 					this.props.close();
+					this.setState({ loading: false });
 				} else {
 					Alert.error("An account already exists with this email.", 3000);
+					this.setState({ loading: false });
 				}
 			})
 			.catch((err) => {
 				Alert.error("Unable to contact server.", 3000);
+				this.setState({ loading: false });
 			});
 	};
 
@@ -124,20 +139,30 @@ class Register extends React.Component {
 					>
 						<FormGroup>
 							<ControlLabel>Email address</ControlLabel>
-							<FormControl type="email" name="email" />
+							<FormControl errorPlacement="topEnd" type="email" name="email" />
 						</FormGroup>
 						<FormGroup>
 							<ControlLabel>Name</ControlLabel>
-							<FormControl type="text" name="first_name" placeholder="First Name" />
-							<FormControl type="text" name="last_name" placeholder="Last Name" />
+							<FormControl
+								errorPlacement="topEnd"
+								type="text"
+								name="first_name"
+								placeholder="First Name"
+							/>
+							<FormControl
+								errorPlacement="topEnd"
+								type="text"
+								name="last_name"
+								placeholder="Last Name"
+							/>
 						</FormGroup>
 						<FormGroup>
 							<ControlLabel>Password</ControlLabel>
-							<FormControl type="password" name="password" />
+							<FormControl errorPlacement="topEnd" type="password" name="password" />
 						</FormGroup>
 						<FormGroup>
 							<ControlLabel>Verify Password</ControlLabel>
-							<FormControl type="password" name="verifyPassword" />
+							<FormControl errorPlacement="topEnd" type="password" name="verifyPassword" />
 						</FormGroup>
 					</Form>
 				</Modal.Body>
@@ -155,6 +180,7 @@ class Register extends React.Component {
 						Cancel
 					</Button>
 				</Modal.Footer>
+				{this.state.loading && <Loader backdrop size="lg" content="Verifying..." vertical />}
 			</Modal>
 		);
 	}
