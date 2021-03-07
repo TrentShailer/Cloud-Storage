@@ -14,3 +14,16 @@
 		transform: translateX(0px);
 	}
 }
+
+.navbar-brand {
+	padding: 18px 20px;
+	display: inline-block;
+}
+
+.navbar-profile {
+	margin-right: 20px;
+	margin-top: 5px;
+}
+.navbar-search {
+	margin-top: 10px;
+}

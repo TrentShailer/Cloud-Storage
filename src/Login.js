@@ -1,5 +1,3 @@
-import "./App.css";
-import "rsuite/dist/styles/rsuite-dark.css";
 import {
 	Container,
 	Content,
@@ -14,6 +12,7 @@ import {
 	Schema,
 	Alert,
 	Loader,
+	Icon,
 } from "rsuite";
 import React from "react";
 import axios from "axios";
@@ -143,7 +142,7 @@ class Login extends React.Component {
 													onClick={this.OpenRegister}
 													color="cyan"
 												>
-													Register
+													<Icon icon="user-plus" /> Register
 												</Button>
 
 												<Button
@@ -154,7 +153,7 @@ class Login extends React.Component {
 													Forgot password?
 												</Button>
 												<Button disabled={this.state.loading} onClick={this.SignIn} color="green">
-													Sign in
+													<Icon icon="sign-in" /> Sign in
 												</Button>
 											</ButtonGroup>
 										</FormGroup>

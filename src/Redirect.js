@@ -1,6 +1,3 @@
-import "./App.css";
-import "rsuite/dist/styles/rsuite-dark.css";
-
 import React from "react";
 
 class Login extends React.Component {
