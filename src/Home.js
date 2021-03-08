@@ -5,6 +5,7 @@ import {
 	Icon,
 	Drawer,
 	Button,
+	ButtonGroup,
 	IconButton,
 	Sidenav,
 	Divider,
@@ -13,7 +14,7 @@ import {
 	Container,
 	Content,
 	Tree,
-
+	FlexboxGrid,
 } from "rsuite";
 import { ToReadable } from "./Util.js";
 import React from "react";
@@ -32,16 +33,42 @@ class Home extends React.Component {
 			used_storage: 0,
 			storagePercent: 0,
 			strokeColor: "default",
-			file_data: [{}]
+			file_data: [{}],
 		};
 		this.ShowProfile = this.ShowProfile.bind(this);
 		this.CoseProfile = this.CoseProfile.bind(this);
 		this.SetProgress = this.SetProgress.bind(this);
 		this.StorageModule = this.StorageModule.bind(this);
-		this.SetFileData = this.SetFileData.bind(this);
 	}
 	componentDidMount() {
-		this.setState({file_data: [{value: "0", label: "Example.png"}, {value: "1", label: "Example.png", children: [{value: "1-0", label: "Example.png"}, {value: "1-1", label: "Example.png"}]}, {value: "2", label: "Example.png"}]})
+		this.setState({
+			file_data: [
+				{
+					value: "0",
+					starred: false,
+					type: "Image",
+					date: "21/2/2020",
+					size: 3500000000,
+					label: "Example.png",
+				},
+				{
+					value: "1",
+					starred: true,
+					type: "Folder",
+					label: "Photos",
+					children: [
+						{
+							value: "2",
+							starred: true,
+							type: "Text",
+							date: "21/2/2020",
+							size: 21000000,
+							label: "Example.txt",
+						},
+					],
+				},
+			],
+		});
 		axios
 			.post("/getUserData")
 			.then((res) => {
@@ -52,7 +79,7 @@ class Home extends React.Component {
 						email: res.data.email,
 						max_storage: res.data.max_storage,
 						used_storage: res.data.used_storage,
-						file_data: res.data.file_data
+						file_data: res.data.file_data,
 					},
 					() => {
 						this.SetProgress();
@@ -119,15 +146,69 @@ class Home extends React.Component {
 		);
 	};
 
-	FileInfo = () =>{
-		return (
-			<div></div>
-		)
-	}
+	FileNode = (nodeData) => {
+		var viewWidth = window.innerWidth - 600;
+		var icn = "";
+		switch (nodeData.type) {
+			case "Folder":
+				icn = "folder-o";
+				break;
+			case "Audio":
+				icn = "file-audio-o";
+				break;
+			case "Image":
+				icn = "file-image-o";
+				break;
+			case "Video":
+				icn = "file-movie-o";
+				break;
+			case "Text":
+				icn = "file-text-o";
+				break;
+			case "Zip":
+				icn = "file-zip-o";
+				break;
+			case "Pdf":
+				icn = "file-pdf-o";
+				break;
+			case "Powerpoint":
+				icn = "file-powerpoint-o";
+				break;
+			case "Word":
+				icn = "file-word-o";
+				break;
+			default:
+				icn = "file-o";
+		}
 
-	SetFileData = (createUpdateDataFunction, event) => {
-		//this.setState({file_data: createUpdateDataFunction(this.state.file_data)});
-	}
+		return (
+			<div style={{ width: viewWidth, paddingTop: 5, paddingBottom: -5 }}>
+				<FlexboxGrid justify="space-between">
+					<FlexboxGrid.Item colspan={4}>
+						<Icon size="lg" icon={icn} /> {nodeData.label}
+					</FlexboxGrid.Item>
+					<FlexboxGrid.Item colspan={4}>
+						{nodeData.type !== "Folder" ? ToReadable(nodeData.size) : ""}
+					</FlexboxGrid.Item>
+					<FlexboxGrid.Item colspan={4}>
+						{nodeData.type !== "Folder" ? nodeData.date : ""}
+					</FlexboxGrid.Item>
+					<FlexboxGrid.Item colspan={4}>{nodeData.type}</FlexboxGrid.Item>
+					<FlexboxGrid.Item colspan={2}>
+						<ButtonGroup style={{ marginTop: -8, marginBottom: -3 }}>
+							<IconButton
+								icon={nodeData.starred ? <Icon icon="star" /> : <Icon icon="star-o" />}
+								circle
+								size="md"
+							></IconButton>
+							<IconButton icon={<Icon icon="download2" />} circle size="md"></IconButton>
+							<IconButton icon={<Icon icon="trash2" />} circle size="md"></IconButton>
+						</ButtonGroup>
+					</FlexboxGrid.Item>
+				</FlexboxGrid>
+			</div>
+		);
+	};
 
 	render() {
 		return (
@@ -148,26 +229,32 @@ class Home extends React.Component {
 						</Nav>
 					</Navbar.Body>
 				</Navbar>
-				<Container style={{ marginTop: "20px", marginLeft:"300px", marginRight: "100px" }}>
+				<Container style={{ marginTop: "20px", marginLeft: "300px", marginRight: "100px" }}>
 					<Content>
 						<div>
 							<Uploader action="/upload" draggable>
-								<div style={{lineHeight: '100px'}}>Click or Drag files to this area to upload</div>
+								<div style={{ lineHeight: "100px" }}>
+									Click or Drag files to this area to upload
+								</div>
 							</Uploader>
 						</div>
-						<div >
+						<div>
 							<Tree
+								renderTreeNode={(nodeData) => {
+									return this.FileNode(nodeData);
+								}}
 								data={this.state.file_data}
 								draggable
 								defaultExpandAll
-								onDrop={({createUpdateDataFunction}, event)=>{
-									this.setState({file_data: createUpdateDataFunction(this.state.file_data)});
+								onDrop={({ createUpdateDataFunction }, event) => {
+									if (true)
+										this.setState({ file_data: createUpdateDataFunction(this.state.file_data) });
 								}}
 							/>
 						</div>
 					</Content>
 				</Container>
-				<Drawer style={{ width: 250}} show={this.state.showProfile} onHide={this.CoseProfile}>
+				<Drawer style={{ width: 250 }} show={this.state.showProfile} onHide={this.CoseProfile}>
 					<Drawer.Header>
 						<Drawer.Title>
 							{this.state.first_name} {this.state.last_name}
@@ -210,7 +297,6 @@ class Home extends React.Component {
 						</Sidenav.Body>
 					</Sidenav>
 				</div>
-				
 			</div>
 		);
 	}
