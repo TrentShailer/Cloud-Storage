@@ -203,8 +203,18 @@ class Home extends React.Component {
 								icon={nodeData.starred ? <Icon icon="star" /> : <Icon icon="star-o" />}
 								circle
 								size="md"
+								onClick={() => {
+									nodeData.starred = !nodeData.starred;
+								}}
 							></IconButton>
-							<IconButton icon={<Icon icon="download2" />} circle size="md"></IconButton>
+							<IconButton
+								icon={<Icon icon="download2" />}
+								circle
+								size="md"
+								onClick={() => {
+									window.location.href = nodeData.url;
+								}}
+							></IconButton>
 							<IconButton
 								onClick={() => {
 									navigator.clipboard.writeText(nodeData.url);
