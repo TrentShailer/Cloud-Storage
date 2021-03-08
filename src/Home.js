@@ -147,7 +147,7 @@ class Home extends React.Component {
 	};
 
 	FileNode = (nodeData) => {
-		var viewWidth = window.innerWidth - 600;
+		var viewWidth = window.innerWidth - 500;
 		var icn = "";
 		switch (nodeData.type) {
 			case "Folder":
