@@ -9,6 +9,11 @@ import {
 	Sidenav,
 	Divider,
 	Progress,
+	Uploader,
+	Container,
+	Content,
+	Tree,
+
 } from "rsuite";
 import { ToReadable } from "./Util.js";
 import React from "react";
@@ -27,6 +32,7 @@ class Home extends React.Component {
 			used_storage: 0,
 			storagePercent: 0,
 			strokeColor: "default",
+			file_data: ""
 		};
 		this.ShowProfile = this.ShowProfile.bind(this);
 		this.CoseProfile = this.CoseProfile.bind(this);
@@ -34,6 +40,7 @@ class Home extends React.Component {
 		this.StorageModule = this.StorageModule.bind(this);
 	}
 	componentDidMount() {
+		this.setState({file_data: ``})
 		axios
 			.post("/getUserData")
 			.then((res) => {
@@ -44,6 +51,7 @@ class Home extends React.Component {
 						email: res.data.email,
 						max_storage: res.data.max_storage,
 						used_storage: res.data.used_storage,
+						file_data: res.data.file_data
 					},
 					() => {
 						this.SetProgress();
@@ -110,6 +118,16 @@ class Home extends React.Component {
 		);
 	};
 
+	FileInfo = () =>{
+		return (
+			<div></div>
+		)
+	}
+
+	SetFileData = () => {
+
+	}
+
 	render() {
 		return (
 			<div>
@@ -129,7 +147,26 @@ class Home extends React.Component {
 						</Nav>
 					</Navbar.Body>
 				</Navbar>
-				<Drawer style={{ width: 250 }} show={this.state.showProfile} onHide={this.CoseProfile}>
+				<Container style={{ marginTop: "20px", marginLeft:"300px", marginRight: "100px" }}>
+					<Content>
+						<div>
+							<Uploader action="/upload" draggable>
+								<div style={{lineHeight: '100px'}}>Click or Drag files to this area to upload</div>
+							</Uploader>
+						</div>
+						<div>
+							<Tree
+								data={this.state.file_data}
+								draggable
+								defaultExpandAll
+								onDrop={({ createUpdateDataFunction }, event) =>
+									this.SetFileData(createUpdateDataFunction, event)
+								}
+							/>
+						</div>
+					</Content>
+				</Container>
+				<Drawer style={{ width: 250}} show={this.state.showProfile} onHide={this.CoseProfile}>
 					<Drawer.Header>
 						<Drawer.Title>
 							{this.state.first_name} {this.state.last_name}
@@ -153,7 +190,7 @@ class Home extends React.Component {
 						</Button>
 					</Drawer.Footer>
 				</Drawer>
-				<div style={{ width: 250 }}>
+				<div style={{ width: 250, position: "absolute", top: "55px" }}>
 					<Sidenav activeKey="1">
 						<Sidenav.Body>
 							<Nav>
@@ -172,6 +209,7 @@ class Home extends React.Component {
 						</Sidenav.Body>
 					</Sidenav>
 				</div>
+				
 			</div>
 		);
 	}
