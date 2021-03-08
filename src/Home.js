@@ -246,9 +246,13 @@ class Home extends React.Component {
 								data={this.state.file_data}
 								draggable
 								defaultExpandAll
-								onDrop={({ createUpdateDataFunction }, event) => {
-									if (true)
-										this.setState({ file_data: createUpdateDataFunction(this.state.file_data) });
+								onDrop={(data, event) => {
+									console.log(data);
+									if (data.dropNode.type === "Folder")
+										this.setState({
+											file_data: data.createUpdateDataFunction(this.state.file_data),
+										});
+									else Alert.error("You may only move files into folders.", 3000);
 								}}
 							/>
 						</div>
