@@ -1,5 +1,5 @@
 import "./App.css";
-import "rsuite/dist/styles/rsuite-default.css";
+import "rsuite/dist/styles/rsuite-dark.css";
 import {} from "rsuite";
 import React from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";

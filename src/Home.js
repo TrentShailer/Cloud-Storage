@@ -32,15 +32,16 @@ class Home extends React.Component {
 			used_storage: 0,
 			storagePercent: 0,
 			strokeColor: "default",
-			file_data: ""
+			file_data: [{}]
 		};
 		this.ShowProfile = this.ShowProfile.bind(this);
 		this.CoseProfile = this.CoseProfile.bind(this);
 		this.SetProgress = this.SetProgress.bind(this);
 		this.StorageModule = this.StorageModule.bind(this);
+		this.SetFileData = this.SetFileData.bind(this);
 	}
 	componentDidMount() {
-		this.setState({file_data: ``})
+		this.setState({file_data: [{value: "0", label: "Example.png"}, {value: "1", label: "Example.png", children: [{value: "1-0", label: "Example.png"}, {value: "1-1", label: "Example.png"}]}, {value: "2", label: "Example.png"}]})
 		axios
 			.post("/getUserData")
 			.then((res) => {
@@ -124,8 +125,8 @@ class Home extends React.Component {
 		)
 	}
 
-	SetFileData = () => {
-
+	SetFileData = (createUpdateDataFunction, event) => {
+		//this.setState({file_data: createUpdateDataFunction(this.state.file_data)});
 	}
 
 	render() {
@@ -154,14 +155,14 @@ class Home extends React.Component {
 								<div style={{lineHeight: '100px'}}>Click or Drag files to this area to upload</div>
 							</Uploader>
 						</div>
-						<div>
+						<div >
 							<Tree
 								data={this.state.file_data}
 								draggable
 								defaultExpandAll
-								onDrop={({ createUpdateDataFunction }, event) =>
-									this.SetFileData(createUpdateDataFunction, event)
-								}
+								onDrop={({createUpdateDataFunction}, event)=>{
+									this.setState({file_data: createUpdateDataFunction(this.state.file_data)});
+								}}
 							/>
 						</div>
 					</Content>
