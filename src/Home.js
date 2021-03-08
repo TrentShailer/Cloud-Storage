@@ -50,12 +50,14 @@ class Home extends React.Component {
 					date: "21/2/2020",
 					size: 3500000000,
 					label: "Example.png",
+					url: "",
 				},
 				{
 					value: "1",
 					starred: true,
 					type: "Folder",
 					label: "Photos",
+					url: "",
 					children: [
 						{
 							value: "2",
@@ -64,6 +66,7 @@ class Home extends React.Component {
 							date: "21/2/2020",
 							size: 21000000,
 							label: "Example.txt",
+							url: "",
 						},
 					],
 				},
@@ -194,7 +197,7 @@ class Home extends React.Component {
 						{nodeData.type !== "Folder" ? nodeData.date : ""}
 					</FlexboxGrid.Item>
 					<FlexboxGrid.Item colspan={4}>{nodeData.type}</FlexboxGrid.Item>
-					<FlexboxGrid.Item colspan={2}>
+					<FlexboxGrid.Item colspan={3}>
 						<ButtonGroup style={{ marginTop: -8, marginBottom: -3 }}>
 							<IconButton
 								icon={nodeData.starred ? <Icon icon="star" /> : <Icon icon="star-o" />}
@@ -202,6 +205,15 @@ class Home extends React.Component {
 								size="md"
 							></IconButton>
 							<IconButton icon={<Icon icon="download2" />} circle size="md"></IconButton>
+							<IconButton
+								onClick={() => {
+									navigator.clipboard.writeText(nodeData.url);
+									Alert.success("The URL was copied to the clipboard.", 3000);
+								}}
+								icon={<Icon icon="link" />}
+								circle
+								size="md"
+							></IconButton>
 							<IconButton icon={<Icon icon="trash2" />} circle size="md"></IconButton>
 						</ButtonGroup>
 					</FlexboxGrid.Item>
