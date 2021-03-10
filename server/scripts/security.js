@@ -8,7 +8,6 @@ async function Hash(input) {
 
 async function CheckHash(hash, input) {
 	var result = await argon.verify(hash, input);
-	console.log(result);
 	return result;
 }
 

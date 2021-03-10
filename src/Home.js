@@ -15,6 +15,7 @@ import {
 	Content,
 	Tree,
 	FlexboxGrid,
+	IconStack
 } from "rsuite";
 import { ToReadable } from "./Util.js";
 import React from "react";
@@ -34,11 +35,13 @@ class Home extends React.Component {
 			storagePercent: 0,
 			strokeColor: "default",
 			file_data: [{}],
+			renderTree: true,
 		};
 		this.ShowProfile = this.ShowProfile.bind(this);
 		this.CoseProfile = this.CoseProfile.bind(this);
 		this.SetProgress = this.SetProgress.bind(this);
 		this.StorageModule = this.StorageModule.bind(this);
+		this.CreateFolder = this.CreateFolder.bind(this);
 	}
 	componentDidMount() {
 		this.setState({
@@ -92,6 +95,22 @@ class Home extends React.Component {
 			.catch((err) => {
 				Alert.error("Unable to contact server.", 3000);
 			});
+	}
+	CreateFolder = () =>{
+		this.setState({renderTree: false})
+		// TODO ping server
+		this.state.file_data.push({
+			value: Math.random() * 10000,
+			starred: false,
+			type: "Folder",
+			label: "New Folder",
+			url: "",
+			
+		});
+		this.setState({file_data: this.state.file_data}, ()=>{
+			this.setState({renderTree: true})
+		})
+		
 	}
 	ShowProfile = () => {
 		this.setState({ showProfile: true });
@@ -260,16 +279,20 @@ class Home extends React.Component {
 								</div>
 							</Uploader>
 						</div>
+						<div style={{marginBottom: 10}}>
+							<Button onClick={this.CreateFolder} appearance="subtle"><IconStack> <Icon size="lg" stack="2x" icon="folder"/><Icon stack="1x" style={{color: "#000000"}} icon="plus"/></IconStack> Create Folder</Button>
+						</div>
 						<div>
-							<Tree
+							{ this.state.renderTree && <Tree
 								renderTreeNode={(nodeData) => {
 									return this.FileNode(nodeData);
 								}}
 								data={this.state.file_data}
+								onChange={(value)=>{
+									console.log(value);
+								}}
 								draggable
-								defaultExpandAll
-								onDrop={(data, event) => {
-									console.log(data);
+								onDrop={(data) => {
 									if (data.dropNode.type === "Folder")
 										this.setState({
 											file_data: data.createUpdateDataFunction(this.state.file_data),
@@ -277,6 +300,9 @@ class Home extends React.Component {
 									else Alert.error("You may only move files into folders.", 3000);
 								}}
 							/>
+
+							}
+							
 						</div>
 					</Content>
 				</Container>
