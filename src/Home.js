@@ -5,7 +5,7 @@ import {
 	Icon,
 	Drawer,
 	Button,
-	ButtonGroup,
+	Dropdown,
 	IconButton,
 	Sidenav,
 	Divider,
@@ -217,34 +217,12 @@ class Home extends React.Component {
 					</FlexboxGrid.Item>
 					<FlexboxGrid.Item colspan={4}>{nodeData.type}</FlexboxGrid.Item>
 					<FlexboxGrid.Item colspan={3}>
-						<ButtonGroup style={{ marginTop: -8, marginBottom: -3 }}>
-							<IconButton
-								icon={nodeData.starred ? <Icon icon="star" /> : <Icon icon="star-o" />}
-								circle
-								size="md"
-								onClick={() => {
-									nodeData.starred = !nodeData.starred;
-								}}
-							></IconButton>
-							<IconButton
-								icon={<Icon icon="download2" />}
-								circle
-								size="md"
-								onClick={() => {
-									window.location.href = nodeData.url;
-								}}
-							></IconButton>
-							<IconButton
-								onClick={() => {
-									navigator.clipboard.writeText(nodeData.url);
-									Alert.success("The URL was copied to the clipboard.", 3000);
-								}}
-								icon={<Icon icon="link" />}
-								circle
-								size="md"
-							></IconButton>
-							<IconButton icon={<Icon icon="trash2" />} circle size="md"></IconButton>
-						</ButtonGroup>
+						<Dropdown icon={<Icon icon="ellipsis-h"/>}>
+							<Dropdown.Item  icon={<Icon icon="star-o" />}>Star</Dropdown.Item>
+							<Dropdown.Item  icon={<Icon icon="cloud-download" />}>Download</Dropdown.Item>
+							<Dropdown.Item  icon={<Icon icon="link" />}>Copy Link</Dropdown.Item>
+							<Dropdown.Item  icon={<Icon icon="trash2" />}>Delete</Dropdown.Item>
+						</Dropdown>
 					</FlexboxGrid.Item>
 				</FlexboxGrid>
 			</div>
