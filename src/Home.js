@@ -217,11 +217,11 @@ class Home extends React.Component {
 					</FlexboxGrid.Item>
 					<FlexboxGrid.Item colspan={4}>{nodeData.type}</FlexboxGrid.Item>
 					<FlexboxGrid.Item colspan={3}>
-						<Dropdown icon={<Icon icon="ellipsis-h"/>}>
-							<Dropdown.Item  icon={<Icon icon="star-o" />}>Star</Dropdown.Item>
-							<Dropdown.Item  icon={<Icon icon="cloud-download" />}>Download</Dropdown.Item>
-							<Dropdown.Item  icon={<Icon icon="link" />}>Copy Link</Dropdown.Item>
-							<Dropdown.Item  icon={<Icon icon="trash2" />}>Delete</Dropdown.Item>
+						<Dropdown icon={<Icon icon="ellipsis-h"/>} >
+							<Dropdown.Item icon={<Icon icon="star-o" />}>Star</Dropdown.Item>
+							<Dropdown.Item icon={<Icon icon="cloud-download" />}>Download</Dropdown.Item>
+							<Dropdown.Item icon={<Icon icon="link" />}>Copy Link</Dropdown.Item>
+							<Dropdown.Item icon={<Icon icon="trash2" />}>Delete</Dropdown.Item>
 						</Dropdown>
 					</FlexboxGrid.Item>
 				</FlexboxGrid>
@@ -260,7 +260,7 @@ class Home extends React.Component {
 						<div style={{marginBottom: 10}}>
 							<Button onClick={this.CreateFolder} appearance="subtle"><IconStack> <Icon size="lg" stack="2x" icon="folder"/><Icon stack="1x" style={{color: "#000000"}} icon="plus"/></IconStack> Create Folder</Button>
 						</div>
-						<div>
+						<div style={{ height: "50vh"}}>
 							{ this.state.renderTree && <Tree
 								renderTreeNode={(nodeData) => {
 									return this.FileNode(nodeData);
